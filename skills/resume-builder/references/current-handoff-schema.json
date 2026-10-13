@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Generated from the browser-safe resume-handoff module public contract. Documentation only; this file does not register MCP tools.",
   "generatedFrom": "src/modules/resume-handoff/index.ts",
-  "pluginVersion": "0.3.1",
+  "pluginVersion": "0.3.2",
   "requiredScope": "resume:handoff",
   "handoffTtlMinutes": 45,
   "tools": {
