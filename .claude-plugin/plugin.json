@@ -1,7 +1,7 @@
 {
   "name": "infinite-resume",
   "displayName": "Infinite Resume",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Build, improve, tailor, and review truthful resumes with a shared Infinite Resume skill and optional authenticated preview transfer.",
   "author": {
     "name": "Infinite Resume",
