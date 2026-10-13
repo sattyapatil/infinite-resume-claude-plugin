@@ -1,0 +1,14 @@
+{
+  "name": "infinite-resume-marketplace",
+  "description": "Infinite Resume plugins for Claude.",
+  "owner": {
+    "name": "Infinite Resume"
+  },
+  "plugins": [
+    {
+      "name": "infinite-resume",
+      "source": "./",
+      "description": "Build, improve, tailor, and review truthful resumes with a shared Infinite Resume skill and optional authenticated preview transfer."
+    }
+  ]
+}

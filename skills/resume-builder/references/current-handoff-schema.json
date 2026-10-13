@@ -1,0 +1,1795 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Generated from the browser-safe resume-handoff module public contract. Documentation only; this file does not register MCP tools.",
+  "generatedFrom": "src/modules/resume-handoff/index.ts",
+  "pluginVersion": "0.3.1",
+  "requiredScope": "resume:handoff",
+  "handoffTtlMinutes": 45,
+  "tools": {
+    "createResumeHandoff": {
+      "name": "createResumeHandoff",
+      "title": "Send approved resume to Infinite Resume",
+      "description": "Creates a one-time editable preview of a complete resume in Infinite Resume. Stores the submitted content until the link is opened or expires, and returns the preview link, valid for 45 minutes. Requires metadata.userConfirmed to be true, which records that the user approved this exact content for transfer.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "title": {
+            "default": "Generated Resume",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "templateId": {
+            "default": "classic-ats",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "fontId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "colorThemeId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "sectionOrder": {
+            "maxItems": 30,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "personal-info",
+                "summary",
+                "experience",
+                "education",
+                "skills",
+                "certifications",
+                "projects",
+                "languages",
+                "achievements",
+                "publications",
+                "volunteer",
+                "hobbies",
+                "references",
+                "custom"
+              ]
+            }
+          },
+          "content": {
+            "type": "object",
+            "properties": {
+              "personalInfo": {
+                "type": "object",
+                "properties": {
+                  "fullName": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "jobTitle": {
+                    "type": "string",
+                    "maxLength": 500
+                  },
+                  "email": {
+                    "default": "",
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 320,
+                        "format": "email",
+                        "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                      },
+                      {
+                        "type": "string",
+                        "const": ""
+                      }
+                    ]
+                  },
+                  "phone": {
+                    "default": "",
+                    "type": "string",
+                    "maxLength": 80
+                  },
+                  "location": {
+                    "default": "",
+                    "type": "string",
+                    "maxLength": 200
+                  },
+                  "linkedin": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 500,
+                        "pattern": "^(?:|https?:\\/\\/[^\\s]+)$"
+                      },
+                      {
+                        "type": "string",
+                        "const": ""
+                      }
+                    ]
+                  },
+                  "website": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 500,
+                        "pattern": "^(?:|https?:\\/\\/[^\\s]+)$"
+                      },
+                      {
+                        "type": "string",
+                        "const": ""
+                      }
+                    ]
+                  },
+                  "github": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 500,
+                        "pattern": "^(?:|https?:\\/\\/[^\\s]+)$"
+                      },
+                      {
+                        "type": "string",
+                        "const": ""
+                      }
+                    ]
+                  },
+                  "photo": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 500,
+                        "pattern": "^(?:|https?:\\/\\/[^\\s]+)$"
+                      },
+                      {
+                        "type": "string",
+                        "const": ""
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "fullName"
+                ],
+                "additionalProperties": false
+              },
+              "summary": {
+                "default": "",
+                "type": "string",
+                "maxLength": 1800
+              },
+              "experience": {
+                "default": [],
+                "maxItems": 50,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "company": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    },
+                    "position": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    },
+                    "location": {
+                      "default": "",
+                      "type": "string",
+                      "maxLength": 500
+                    },
+                    "startDate": {
+                      "default": "",
+                      "type": "string",
+                      "pattern": "^(?:|[0-9]{4}-(?:0[1-9]|1[0-2]))$"
+                    },
+                    "endDate": {
+                      "default": null,
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^(?:|[0-9]{4}-(?:0[1-9]|1[0-2]))$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "current": {
+                      "type": "boolean"
+                    },
+                    "description": {
+                      "default": "",
+                      "description": "Editable content. Plain text, one \"- \" prefixed bullet per line, holding all achievements. Separate bullets or highlights arrays are not accepted.",
+                      "type": "string",
+                      "maxLength": 4000
+                    },
+                    "order": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 999
+                    }
+                  },
+                  "required": [
+                    "company",
+                    "position"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "education": {
+                "default": [],
+                "maxItems": 50,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "institution": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 240
+                    },
+                    "degree": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 240
+                    },
+                    "field": {
+                      "default": "",
+                      "type": "string",
+                      "maxLength": 500
+                    },
+                    "location": {
+                      "default": "",
+                      "type": "string",
+                      "maxLength": 500
+                    },
+                    "startDate": {
+                      "default": "",
+                      "type": "string",
+                      "pattern": "^(?:|[0-9]{4}-(?:0[1-9]|1[0-2]))$"
+                    },
+                    "endDate": {
+                      "default": null,
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^(?:|[0-9]{4}-(?:0[1-9]|1[0-2]))$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "current": {
+                      "type": "boolean"
+                    },
+                    "gpa": {
+                      "type": "string",
+                      "maxLength": 500
+                    },
+                    "honors": {
+                      "maxItems": 12,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 600
+                      }
+                    },
+                    "description": {
+                      "default": "",
+                      "description": "Editable content. Plain text, one \"- \" prefixed bullet per line, holding all achievements. Separate bullets or highlights arrays are not accepted.",
+                      "type": "string",
+                      "maxLength": 4000
+                    },
+                    "order": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 999
+                    }
+                  },
+                  "required": [
+                    "institution",
+                    "degree"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "skills": {
+                "default": [],
+                "maxItems": 50,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "category": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "items": {
+                      "minItems": 1,
+                      "maxItems": 80,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 120
+                      }
+                    },
+                    "order": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 999
+                    }
+                  },
+                  "required": [
+                    "category",
+                    "items"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "certifications": {
+                "default": [],
+                "maxItems": 50,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "name": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 240
+                    },
+                    "issuer": {
+                      "default": "",
+                      "type": "string",
+                      "maxLength": 500
+                    },
+                    "date": {
+                      "default": "",
+                      "type": "string",
+                      "pattern": "^(?:|[0-9]{4}-(?:0[1-9]|1[0-2]))$"
+                    },
+                    "expiryDate": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^(?:|[0-9]{4}-(?:0[1-9]|1[0-2]))$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "credentialId": {
+                      "type": "string",
+                      "maxLength": 500
+                    },
+                    "url": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "maxLength": 500,
+                          "pattern": "^(?:|https?:\\/\\/[^\\s]+)$"
+                        },
+                        {
+                          "type": "string",
+                          "const": ""
+                        }
+                      ]
+                    },
+                    "order": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 999
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "projects": {
+                "default": [],
+                "maxItems": 50,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "name": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 240
+                    },
+                    "description": {
+                      "default": "",
+                      "description": "Editable content. Plain text, one \"- \" prefixed bullet per line, holding all achievements. Separate bullets or highlights arrays are not accepted.",
+                      "type": "string",
+                      "maxLength": 4000
+                    },
+                    "role": {
+                      "type": "string",
+                      "maxLength": 500
+                    },
+                    "technologies": {
+                      "default": [],
+                      "maxItems": 60,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 120
+                      }
+                    },
+                    "link": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "maxLength": 500,
+                          "pattern": "^(?:|https?:\\/\\/[^\\s]+)$"
+                        },
+                        {
+                          "type": "string",
+                          "const": ""
+                        }
+                      ]
+                    },
+                    "startDate": {
+                      "default": "",
+                      "type": "string",
+                      "pattern": "^(?:|[0-9]{4}-(?:0[1-9]|1[0-2]))$"
+                    },
+                    "endDate": {
+                      "default": null,
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^(?:|[0-9]{4}-(?:0[1-9]|1[0-2]))$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "current": {
+                      "type": "boolean"
+                    },
+                    "order": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 999
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "languages": {
+                "default": [],
+                "maxItems": 50,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "language": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "proficiency": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    }
+                  },
+                  "required": [
+                    "language",
+                    "proficiency"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "achievements": {
+                "default": [],
+                "maxItems": 50,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "title": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 240
+                    },
+                    "description": {
+                      "default": "",
+                      "type": "string",
+                      "maxLength": 4000
+                    },
+                    "date": {
+                      "default": "",
+                      "type": "string",
+                      "pattern": "^(?:|[0-9]{4}-(?:0[1-9]|1[0-2]))$"
+                    }
+                  },
+                  "required": [
+                    "title"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "publications": {
+                "default": [],
+                "maxItems": 50,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "title": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 300
+                    },
+                    "authors": {
+                      "default": [],
+                      "maxItems": 30,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 160
+                      }
+                    },
+                    "publisher": {
+                      "default": "",
+                      "type": "string",
+                      "maxLength": 500
+                    },
+                    "date": {
+                      "default": "",
+                      "type": "string",
+                      "pattern": "^(?:|[0-9]{4}-(?:0[1-9]|1[0-2]))$"
+                    },
+                    "url": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "maxLength": 500,
+                          "pattern": "^(?:|https?:\\/\\/[^\\s]+)$"
+                        },
+                        {
+                          "type": "string",
+                          "const": ""
+                        }
+                      ]
+                    },
+                    "description": {
+                      "default": "",
+                      "type": "string",
+                      "maxLength": 4000
+                    }
+                  },
+                  "required": [
+                    "title"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "volunteer": {
+                "default": [],
+                "maxItems": 50,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "organization": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 240
+                    },
+                    "role": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    },
+                    "startDate": {
+                      "default": "",
+                      "type": "string",
+                      "pattern": "^(?:|[0-9]{4}-(?:0[1-9]|1[0-2]))$"
+                    },
+                    "endDate": {
+                      "default": null,
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^(?:|[0-9]{4}-(?:0[1-9]|1[0-2]))$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "current": {
+                      "type": "boolean"
+                    },
+                    "description": {
+                      "default": "",
+                      "description": "Editable content. Plain text, one \"- \" prefixed bullet per line, holding all achievements. Separate bullets or highlights arrays are not accepted.",
+                      "type": "string",
+                      "maxLength": 4000
+                    }
+                  },
+                  "required": [
+                    "organization",
+                    "role"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "hobbies": {
+                "default": [],
+                "maxItems": 40,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                }
+              },
+              "references": {
+                "default": [],
+                "maxItems": 10,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "name": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    },
+                    "title": {
+                      "default": "",
+                      "type": "string",
+                      "maxLength": 500
+                    },
+                    "company": {
+                      "default": "",
+                      "type": "string",
+                      "maxLength": 500
+                    },
+                    "email": {
+                      "default": "",
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "maxLength": 320,
+                          "format": "email",
+                          "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                        },
+                        {
+                          "type": "string",
+                          "const": ""
+                        }
+                      ]
+                    },
+                    "phone": {
+                      "default": "",
+                      "type": "string",
+                      "maxLength": 80
+                    },
+                    "relationship": {
+                      "default": "",
+                      "type": "string",
+                      "maxLength": 500
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "custom": {
+                "default": [],
+                "maxItems": 10,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "title": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 160
+                    },
+                    "content": {
+                      "default": "",
+                      "type": "string",
+                      "maxLength": 4000
+                    }
+                  },
+                  "required": [
+                    "title"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "personalInfo"
+            ],
+            "additionalProperties": false
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "targetRole": {
+                "type": "string",
+                "maxLength": 500
+              },
+              "targetCompany": {
+                "type": "string",
+                "maxLength": 500
+              },
+              "source": {
+                "type": "string",
+                "enum": [
+                  "scratch",
+                  "pdf",
+                  "text",
+                  "linkedin",
+                  "job_description",
+                  "mixed"
+                ]
+              },
+              "jobDescriptionProvided": {
+                "type": "boolean"
+              },
+              "userConfirmed": {
+                "type": "boolean",
+                "const": true,
+                "description": "Records that the user approved this resume and its transfer to Infinite Resume."
+              }
+            },
+            "required": [
+              "userConfirmed"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "content",
+          "metadata"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "handoffId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "previewUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "expiresInMinutes": {
+            "type": "number",
+            "const": 45
+          }
+        },
+        "required": [
+          "handoffId",
+          "previewUrl",
+          "expiresAt",
+          "expiresInMinutes"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "securitySchemes": [
+        {
+          "type": "oauth2",
+          "scopes": [
+            "resume:handoff",
+            "offline_access"
+          ]
+        }
+      ],
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "oauth2",
+            "scopes": [
+              "resume:handoff",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    },
+    "refreshResumeHandoff": {
+      "name": "refreshResumeHandoff",
+      "title": "Replace approved Infinite Resume preview",
+      "description": "Replaces this connected account's unclaimed, unexpired preview with a new complete resume. Revokes the previous preview link in the same operation and returns a new link, valid for 45 minutes. Fails if the previous preview was already opened, expired, revoked, or created by another account.",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "previousHandoffId": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 80,
+            "description": "The unclaimed, unexpired handoff ID created by this connected account. The old preview link will be revoked."
+          },
+          "resume": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "default": "Generated Resume",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "templateId": {
+                "default": "classic-ats",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "fontId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "colorThemeId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "sectionOrder": {
+                "maxItems": 30,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "personal-info",
+                    "summary",
+                    "experience",
+                    "education",
+                    "skills",
+                    "certifications",
+                    "projects",
+                    "languages",
+                    "achievements",
+                    "publications",
+                    "volunteer",
+                    "hobbies",
+                    "references",
+                    "custom"
+                  ]
+                }
+              },
+              "content": {
+                "type": "object",
+                "properties": {
+                  "personalInfo": {
+                    "type": "object",
+                    "properties": {
+                      "fullName": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "jobTitle": {
+                        "type": "string",
+                        "maxLength": 500
+                      },
+                      "email": {
+                        "default": "",
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "maxLength": 320,
+                            "format": "email",
+                            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                          },
+                          {
+                            "type": "string",
+                            "const": ""
+                          }
+                        ]
+                      },
+                      "phone": {
+                        "default": "",
+                        "type": "string",
+                        "maxLength": 80
+                      },
+                      "location": {
+                        "default": "",
+                        "type": "string",
+                        "maxLength": 200
+                      },
+                      "linkedin": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "maxLength": 500,
+                            "pattern": "^(?:|https?:\\/\\/[^\\s]+)$"
+                          },
+                          {
+                            "type": "string",
+                            "const": ""
+                          }
+                        ]
+                      },
+                      "website": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "maxLength": 500,
+                            "pattern": "^(?:|https?:\\/\\/[^\\s]+)$"
+                          },
+                          {
+                            "type": "string",
+                            "const": ""
+                          }
+                        ]
+                      },
+                      "github": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "maxLength": 500,
+                            "pattern": "^(?:|https?:\\/\\/[^\\s]+)$"
+                          },
+                          {
+                            "type": "string",
+                            "const": ""
+                          }
+                        ]
+                      },
+                      "photo": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "maxLength": 500,
+                            "pattern": "^(?:|https?:\\/\\/[^\\s]+)$"
+                          },
+                          {
+                            "type": "string",
+                            "const": ""
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "fullName"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "summary": {
+                    "default": "",
+                    "type": "string",
+                    "maxLength": 1800
+                  },
+                  "experience": {
+                    "default": [],
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 120
+                        },
+                        "company": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        },
+                        "position": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        },
+                        "location": {
+                          "default": "",
+                          "type": "string",
+                          "maxLength": 500
+                        },
+                        "startDate": {
+                          "default": "",
+                          "type": "string",
+                          "pattern": "^(?:|[0-9]{4}-(?:0[1-9]|1[0-2]))$"
+                        },
+                        "endDate": {
+                          "default": null,
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "pattern": "^(?:|[0-9]{4}-(?:0[1-9]|1[0-2]))$"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "current": {
+                          "type": "boolean"
+                        },
+                        "description": {
+                          "default": "",
+                          "description": "Editable content. Plain text, one \"- \" prefixed bullet per line, holding all achievements. Separate bullets or highlights arrays are not accepted.",
+                          "type": "string",
+                          "maxLength": 4000
+                        },
+                        "order": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 999
+                        }
+                      },
+                      "required": [
+                        "company",
+                        "position"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "education": {
+                    "default": [],
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 120
+                        },
+                        "institution": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 240
+                        },
+                        "degree": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 240
+                        },
+                        "field": {
+                          "default": "",
+                          "type": "string",
+                          "maxLength": 500
+                        },
+                        "location": {
+                          "default": "",
+                          "type": "string",
+                          "maxLength": 500
+                        },
+                        "startDate": {
+                          "default": "",
+                          "type": "string",
+                          "pattern": "^(?:|[0-9]{4}-(?:0[1-9]|1[0-2]))$"
+                        },
+                        "endDate": {
+                          "default": null,
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "pattern": "^(?:|[0-9]{4}-(?:0[1-9]|1[0-2]))$"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "current": {
+                          "type": "boolean"
+                        },
+                        "gpa": {
+                          "type": "string",
+                          "maxLength": 500
+                        },
+                        "honors": {
+                          "maxItems": 12,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 600
+                          }
+                        },
+                        "description": {
+                          "default": "",
+                          "description": "Editable content. Plain text, one \"- \" prefixed bullet per line, holding all achievements. Separate bullets or highlights arrays are not accepted.",
+                          "type": "string",
+                          "maxLength": 4000
+                        },
+                        "order": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 999
+                        }
+                      },
+                      "required": [
+                        "institution",
+                        "degree"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "skills": {
+                    "default": [],
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 120
+                        },
+                        "category": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 120
+                        },
+                        "items": {
+                          "minItems": 1,
+                          "maxItems": 80,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 120
+                          }
+                        },
+                        "order": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 999
+                        }
+                      },
+                      "required": [
+                        "category",
+                        "items"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "certifications": {
+                    "default": [],
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 120
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 240
+                        },
+                        "issuer": {
+                          "default": "",
+                          "type": "string",
+                          "maxLength": 500
+                        },
+                        "date": {
+                          "default": "",
+                          "type": "string",
+                          "pattern": "^(?:|[0-9]{4}-(?:0[1-9]|1[0-2]))$"
+                        },
+                        "expiryDate": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "pattern": "^(?:|[0-9]{4}-(?:0[1-9]|1[0-2]))$"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "credentialId": {
+                          "type": "string",
+                          "maxLength": 500
+                        },
+                        "url": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "maxLength": 500,
+                              "pattern": "^(?:|https?:\\/\\/[^\\s]+)$"
+                            },
+                            {
+                              "type": "string",
+                              "const": ""
+                            }
+                          ]
+                        },
+                        "order": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 999
+                        }
+                      },
+                      "required": [
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "projects": {
+                    "default": [],
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 120
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 240
+                        },
+                        "description": {
+                          "default": "",
+                          "description": "Editable content. Plain text, one \"- \" prefixed bullet per line, holding all achievements. Separate bullets or highlights arrays are not accepted.",
+                          "type": "string",
+                          "maxLength": 4000
+                        },
+                        "role": {
+                          "type": "string",
+                          "maxLength": 500
+                        },
+                        "technologies": {
+                          "default": [],
+                          "maxItems": 60,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 120
+                          }
+                        },
+                        "link": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "maxLength": 500,
+                              "pattern": "^(?:|https?:\\/\\/[^\\s]+)$"
+                            },
+                            {
+                              "type": "string",
+                              "const": ""
+                            }
+                          ]
+                        },
+                        "startDate": {
+                          "default": "",
+                          "type": "string",
+                          "pattern": "^(?:|[0-9]{4}-(?:0[1-9]|1[0-2]))$"
+                        },
+                        "endDate": {
+                          "default": null,
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "pattern": "^(?:|[0-9]{4}-(?:0[1-9]|1[0-2]))$"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "current": {
+                          "type": "boolean"
+                        },
+                        "order": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 999
+                        }
+                      },
+                      "required": [
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "languages": {
+                    "default": [],
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 120
+                        },
+                        "language": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 120
+                        },
+                        "proficiency": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 120
+                        }
+                      },
+                      "required": [
+                        "language",
+                        "proficiency"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "achievements": {
+                    "default": [],
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 120
+                        },
+                        "title": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 240
+                        },
+                        "description": {
+                          "default": "",
+                          "type": "string",
+                          "maxLength": 4000
+                        },
+                        "date": {
+                          "default": "",
+                          "type": "string",
+                          "pattern": "^(?:|[0-9]{4}-(?:0[1-9]|1[0-2]))$"
+                        }
+                      },
+                      "required": [
+                        "title"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "publications": {
+                    "default": [],
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 120
+                        },
+                        "title": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 300
+                        },
+                        "authors": {
+                          "default": [],
+                          "maxItems": 30,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 160
+                          }
+                        },
+                        "publisher": {
+                          "default": "",
+                          "type": "string",
+                          "maxLength": 500
+                        },
+                        "date": {
+                          "default": "",
+                          "type": "string",
+                          "pattern": "^(?:|[0-9]{4}-(?:0[1-9]|1[0-2]))$"
+                        },
+                        "url": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "maxLength": 500,
+                              "pattern": "^(?:|https?:\\/\\/[^\\s]+)$"
+                            },
+                            {
+                              "type": "string",
+                              "const": ""
+                            }
+                          ]
+                        },
+                        "description": {
+                          "default": "",
+                          "type": "string",
+                          "maxLength": 4000
+                        }
+                      },
+                      "required": [
+                        "title"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "volunteer": {
+                    "default": [],
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 120
+                        },
+                        "organization": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 240
+                        },
+                        "role": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        },
+                        "startDate": {
+                          "default": "",
+                          "type": "string",
+                          "pattern": "^(?:|[0-9]{4}-(?:0[1-9]|1[0-2]))$"
+                        },
+                        "endDate": {
+                          "default": null,
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "pattern": "^(?:|[0-9]{4}-(?:0[1-9]|1[0-2]))$"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "current": {
+                          "type": "boolean"
+                        },
+                        "description": {
+                          "default": "",
+                          "description": "Editable content. Plain text, one \"- \" prefixed bullet per line, holding all achievements. Separate bullets or highlights arrays are not accepted.",
+                          "type": "string",
+                          "maxLength": 4000
+                        }
+                      },
+                      "required": [
+                        "organization",
+                        "role"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "hobbies": {
+                    "default": [],
+                    "maxItems": 40,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    }
+                  },
+                  "references": {
+                    "default": [],
+                    "maxItems": 10,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 120
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        },
+                        "title": {
+                          "default": "",
+                          "type": "string",
+                          "maxLength": 500
+                        },
+                        "company": {
+                          "default": "",
+                          "type": "string",
+                          "maxLength": 500
+                        },
+                        "email": {
+                          "default": "",
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "maxLength": 320,
+                              "format": "email",
+                              "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                            },
+                            {
+                              "type": "string",
+                              "const": ""
+                            }
+                          ]
+                        },
+                        "phone": {
+                          "default": "",
+                          "type": "string",
+                          "maxLength": 80
+                        },
+                        "relationship": {
+                          "default": "",
+                          "type": "string",
+                          "maxLength": 500
+                        }
+                      },
+                      "required": [
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "custom": {
+                    "default": [],
+                    "maxItems": 10,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 120
+                        },
+                        "title": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 160
+                        },
+                        "content": {
+                          "default": "",
+                          "type": "string",
+                          "maxLength": 4000
+                        }
+                      },
+                      "required": [
+                        "title"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "personalInfo"
+                ],
+                "additionalProperties": false
+              },
+              "metadata": {
+                "type": "object",
+                "properties": {
+                  "targetRole": {
+                    "type": "string",
+                    "maxLength": 500
+                  },
+                  "targetCompany": {
+                    "type": "string",
+                    "maxLength": 500
+                  },
+                  "source": {
+                    "type": "string",
+                    "enum": [
+                      "scratch",
+                      "pdf",
+                      "text",
+                      "linkedin",
+                      "job_description",
+                      "mixed"
+                    ]
+                  },
+                  "jobDescriptionProvided": {
+                    "type": "boolean"
+                  },
+                  "userConfirmed": {
+                    "type": "boolean",
+                    "const": true,
+                    "description": "Records that the user approved this resume and its transfer to Infinite Resume."
+                  }
+                },
+                "required": [
+                  "userConfirmed"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "content",
+              "metadata"
+            ],
+            "additionalProperties": false,
+            "description": "The complete approved replacement resume, including every section to retain."
+          }
+        },
+        "required": [
+          "previousHandoffId",
+          "resume"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "handoffId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "previewUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "expiresInMinutes": {
+            "type": "number",
+            "const": 45
+          },
+          "previousHandoffId": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 80
+          }
+        },
+        "required": [
+          "handoffId",
+          "previewUrl",
+          "expiresAt",
+          "expiresInMinutes",
+          "previousHandoffId"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "securitySchemes": [
+        {
+          "type": "oauth2",
+          "scopes": [
+            "resume:handoff",
+            "offline_access"
+          ]
+        }
+      ],
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "oauth2",
+            "scopes": [
+              "resume:handoff",
+              "offline_access"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

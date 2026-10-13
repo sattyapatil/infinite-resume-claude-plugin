@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "infinite-resume": {
+      "type": "http",
+      "url": "https://www.infiniteresume.com/api/mcp"
+    }
+  }
+}

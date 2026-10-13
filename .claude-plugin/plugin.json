@@ -1,0 +1,18 @@
+{
+  "name": "infinite-resume",
+  "displayName": "Infinite Resume",
+  "version": "0.3.1",
+  "description": "Build, improve, tailor, and review truthful resumes with a shared Infinite Resume skill and optional authenticated preview transfer.",
+  "author": {
+    "name": "Infinite Resume",
+    "url": "https://www.infiniteresume.com"
+  },
+  "homepage": "https://www.infiniteresume.com",
+  "license": "MIT",
+  "icon": "./assets/infinite-resume-icon.png",
+  "documentationUrl": "https://www.infiniteresume.com",
+  "supportUrl": "https://www.infiniteresume.com/contact",
+  "privacyPolicyUrl": "https://www.infiniteresume.com/privacy-policy",
+  "termsOfServiceUrl": "https://www.infiniteresume.com/terms",
+  "repository": "https://github.com/sattyapatil/infinite-resume-claude-plugin"
+}
